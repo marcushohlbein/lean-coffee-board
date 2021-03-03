@@ -1,8 +1,9 @@
 const express = require('express')
+const { v4: uuidv4 } = require('uuid')
 
 const app = express()
 
-const users = []
+let users = []
 
 app.use(express.json())
 
@@ -11,8 +12,19 @@ app.get('/api/users', (req, res) => {
 })
 
 app.post('/api/users', (req, res) => {
-  users.push(req.body)
+  users.push({ ...req.body, id: uuidv4() })
   res.json(req.body)
+})
+
+app.get('/api/users/:id', (req, res) => {
+  const { id } = req.params
+  res.json(users.find(user => user.id === id))
+})
+
+app.delete('/api/users/:id', (req, res) => {
+  const { id } = req.params
+  users = users.filter(user => user.id !== id)
+  res.json(users)
 })
 
 app.get('/api/cards', (req, res) => {
