@@ -1,28 +1,29 @@
 const express = require('express')
 const Card = require('../models/Card')
 
-const router = express.Router(),
+const router = express.Router()
 
-
-router.get('/api/cards', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   res.json(await Card.find().populate('author').catch(next))
 })
 
-router.get('/api/cards/:id', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   const { id } = req.params
   res.json(await Card.findById(id).populate('author').catch(next))
 })
 
-router.post('/api/cards', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   res.json(await Card.create(req.body).catch(next))
 })
 
-router.patch('/api/cards/:id', async (req, res, next) => {
+router.patch('/:id', async (req, res, next) => {
   const { id } = req.params
-  res.json(await Card.findByIdAndUpdate(id).catch(next))
+  res.json(
+    await Card.findByIdAndUpdate(id, req.body, { new: true }).catch(next)
+  )
 })
 
-router.delete('/api/cards/:id', async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   const { id } = req.params
   res.json(
     await Card.findByIdAndDelete(id, req.body, { new: true }).catch(next)
