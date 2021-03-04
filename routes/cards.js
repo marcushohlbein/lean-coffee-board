@@ -23,6 +23,17 @@ router.patch('/:id', async (req, res, next) => {
   )
 })
 
+router.patch('/:id/votes', async (req, res, next) => {
+  const { id } = req.params
+  res.json(
+    await Card.findByIdAndUpdate(
+      id,
+      { $inc: { votes: 1 } },
+      { new: true }
+    ).catch(next)
+  )
+})
+
 router.delete('/:id', async (req, res, next) => {
   const { id } = req.params
   res.json(
